@@ -2,9 +2,7 @@ title: Priyam's blog
 author: Priyam Tejaswin
 email: priyamtejaswin@gmail.com
 description: > # this means to ignore newlines until "twitter_username:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  <insert witty text here>
 
 # social links
 github_username:  priyamtejaswin
@@ -25,6 +23,9 @@ header_pages:
 # Build settings
 theme: minima
 highlighter: rouge
+permalink: pretty
+
+markdown: kramdown
 kramdown:
   input: GFM
   auto_ids: true
