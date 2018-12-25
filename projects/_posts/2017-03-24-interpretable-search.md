@@ -2,7 +2,7 @@
 layout: post
 title: "Interpretable Image Search"
 excerpt: "An interpretable search engine trained on MSCOCO'14 by combining Google Brain's DeViSE(2015) and Ribiero et. al's LIME(2016)."
-image: "https://camo.githubusercontent.com/b268558d35555d5dc34741f30eaeca5fe7a66297/68747470733a2f2f692e696d6775722e636f6d2f6b4242486338582e676966"
+image: "/assets/images/devise-keras.gif"
 ---
 
 *- by Priyam Tejaswin and Akshay Chawla*
