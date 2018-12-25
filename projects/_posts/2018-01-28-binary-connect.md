@@ -2,7 +2,7 @@
 layout: post
 title: "Binarized Neural Networks"
 excerpt: "Deriving and implementing a bare-bones version of the 2015 NIPS BinaryConnect paper in pure Numpy."
-image: ""
+image: "/assets/images/binary-connect.png"
 ---
 
 *[A bare-bones instructional implementation of BinaryConnect in pure Numpy.](https://nbviewer.jupyter.org/github/priyamtejaswin/simple-binary-connect/blob/master/tutorial.ipynb)*
