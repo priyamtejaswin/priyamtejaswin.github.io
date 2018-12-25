@@ -2,7 +2,7 @@
 layout: post
 title: "NBA-goat (part 2)"
 excerpt: "Discovering the <strong>g</strong>reatest NBA team <strong>o</strong>f <strong>a</strong>ll <strong>t</strong>ime using statistics. This is part 2 which covers ADF."
-image: ""
+image: "/assets/images/nba-goat-adf.gif"
 ---
 
 This is a continuation of the NBA-goat project where I explore different statistical methods for estimating the *true*-skill of a team over time. Part 1 covered ELO. Part 2 covers ADF (Assumed Density Filtering).
