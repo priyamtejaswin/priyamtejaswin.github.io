@@ -2,7 +2,7 @@
 layout: post
 title: "NBA-goat (part 1)"
 excerpt: "Discovering the <strong>g</strong>reatest NBA team <strong>o</strong>f <strong>a</strong>ll <strong>t</strong>ime using statistics. This is part 1 which covers ELO ratings."
-image: ""
+image: "/assets/images/nba-goat-elo.png"
 ---
 
 To find the **greatest-of-all-time** using statistics. I started this project to explore different methods for estimating relative skill of NBA teams. My inspiration was [FiveThirtyEight.com's CARMElo system](https://projects.fivethirtyeight.com/2018-nba-predictions/). The aim is to dive-deep into every method, derive the update equations and discuss the pros and cons. I intend to cover the following methods:
