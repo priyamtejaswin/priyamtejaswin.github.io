@@ -5,4 +5,4 @@ _site
 *.gem
 
 projects/_posts/2018-12-20-zeroth-project.md
-
+*.DS_Store
