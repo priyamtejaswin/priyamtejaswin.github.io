@@ -140,12 +140,15 @@ Another reason could be that the pameters and the updates oscillate around 0, wh
 
 To veryfy this, I tracked the weights and biases at every step. I noticed that between step 97 and 98, the accuracy drop from 0.60 to 0.55 . The l1norm between the two epoch weights is just 7.68 . That's the difference between 7840 values. Plotting a heat map of the difference might shows that the changes were very close to 0. Alltogether, there were 31 flips in the signs, meaning that for 31 inputs, the signal just reveresed, and that might have contributed to the drastic drop in accuracy.
 
-![heatmap](media/diff_heatmap.png)
+<div class="post-image">
+<img src="/assets/images/diff-heatmap.png">
+<p><em><font size="-1"> Heatmap of the differences in weights b/w iters 97 and 98.</font></em></p>
+</div>
 
 
 ## Where's the code?
 
-The code for the tutorial is in `scratch.ipynb`. You can refer to the complete post at https://nbviewer.jupyter.org/github/priyamtejaswin/simple-binary-connect/blob/master/tutorial.ipynb    I highly recommend that you view it on through the link or fire up a Jupyter server and then view it on your local system - it has a lot of Mathjax and the Github rendering is just awful.
+The code for the tutorial is in `scratch.ipynb`. You can refer to the complete post at [https://nbviewer.jupyter.org/github/priyamtejaswin/simple-binary-connect/blob/master/tutorial.ipynb](https://nbviewer.jupyter.org/github/priyamtejaswin/simple-binary-connect/blob/master/tutorial.ipynb). I highly recommend that you view it on through the link or fire up a Jupyter server and then view it on your local system - it has a lot of Mathjax and the Github rendering is just awful.
 
 ## What do I need to run this?
 
