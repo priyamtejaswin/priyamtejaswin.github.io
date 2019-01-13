@@ -15,12 +15,13 @@ The complexity of methods increases according to the [standard, universally acce
 
 ### A note about the notebooks.
 
-I wrote these tutorials before I was aware of hackmd.io. At the time, I would write massive Jupiter notebooks with all the  math, code and figures. The **nbviewer** link will take you to the rendered notebook - this is the recommended way of viewing the project. The 2nd cell of the notebooks contains some javascript which hides all the input code cells for a pleasant reading experience. If you're interested in the code, then please click on the **here** link in the 2nd cell.
+I wrote this tutorial before I was aware of hackmd.io. At the time, I would write massive Jupiter notebooks with all the  math, code and figures. The **nbviewer** link will take you to the rendered notebook - this is the recommended way of viewing the project. The 2nd cell of the notebooks contains some javascript which hides all the input code cells for a pleasant reading experience. If you're interested in the code, then please click on the **here** link in the 2nd cell.
 
 ---
 
 ### Part 1. Elo:
-https://nbviewer.jupyter.org/github/priyamtejaswin/nba-goat/blob/master/nb-elo_vanilla.ipynb
+[https://nbviewer.jupyter.org/github/priyamtejaswin/nba-goat/blob/master/nb-elo_vanilla.ipynb](https://nbviewer.jupyter.org/github/priyamtejaswin/nba-goat/blob/master/nb-elo_vanilla.ipynb)
+
 - [x] Tracking NBA franchises through changes in names and cities.
 - [x] Explain Elo with its core assumptions and apply the vanilla Elo on nba data.
 - [x] Extend the base model to account for score difference(mov-Elo).
