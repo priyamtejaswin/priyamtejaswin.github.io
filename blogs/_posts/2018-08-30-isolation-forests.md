@@ -42,8 +42,8 @@ excerpt: "Yet another deep-dive in finding a `catch-all` anomaly detection algor
 - The ensemble of trees helps.
 
 <div class="post-image">
-        <img src="/assets/images/isf-cuts.png">
-        <p><em><font size="-1">Floating point data and in the road network.</font></em></p>
+    <img src="/assets/images/isf-cuts.png">
+    <p><em><font size="-1">Floating point data and in the road network.</font></em></p>
 </div>
 
 ### Isolation Tree
