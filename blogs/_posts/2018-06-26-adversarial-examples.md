@@ -7,32 +7,31 @@ excerpt: "A BFS into adversarial example generation."
 I and Akshay Chawla had some ideas on generating adversarial examples for audio/speech processing systems. We noticed that none of the existing attacks worked "in the wild" and saw an opportunity to propose something new, possibly inspired from the vision community.
 
 This post will review papers which explore "adversarial example" generation for vision as well as audio:
-1. Intriguing properties of neural networks - Szegedy, Goodfellow (2014) . One of the first papers to explore adversarial examples in the functional spaces of DNNs. https://arxiv.org/pdf/1312.6199.pdf
-2. Explaining and harnessing adverarial examples - Goodfellow and Szegedy (2015) . A more formal approach and analysis. Introduces the FGSM. https://arxiv.org/pdf/1412.6572.pdf
-3. Adversarial examples in the physical world - Kurakin and Goodfellow (2016) . https://arxiv.org/pdf/1607.02533.pdf
+1. Intriguing properties of neural networks - Szegedy, Goodfellow (2014) . One of the first papers to explore adversarial examples in the functional spaces of DNNs. <https://arxiv.org/pdf/1312.6199.pdf>
+2. Explaining and harnessing adverarial examples - Goodfellow and Szegedy (2015) . A more formal approach and analysis. Introduces the FGSM. <https://arxiv.org/pdf/1412.6572.pdf>
+3. Adversarial examples in the physical world - Kurakin and Goodfellow (2016) . <https://arxiv.org/pdf/1607.02533.pdf>
 
----
 
-# 1. Intriguing properties of neural networks - Szegedy, Goodfellow (2014)
+# Intriguing properties of neural networks - Szegedy, Goodfellow (2014)
 
-## 1. Introduction
+### 1. Introduction
 Discusses two counter intuitive properties:
 1. **Semantic meaning of individual units.** The contention is that it's the entire space of activations - rather than the individual units - which contain the semantic information. This is echoed by Mikolov for continuous representations of word-vectors: it is the combined directions of all units and not that of a single unit that lead to semantic interpretibility. 
 2. **The input-output mappings learnt by the network are fairly discontinuous.** By applying an imperceptible non-random perturbation to a test image, it is possible to arbitrarily change the network’s prediction. These perturbations are found by optimizing the input to maximize the prediction error and are appropriately referred to as “adversarial examples”.
 
 These "adversarial examples" are robust - they are valid across architectures, hyper-parameters and training sets.
 
-## 2. Notation
+### 2. Notation
 They denote $x \in \mathbf R^m$ as the input image and $\phi(x)$ as the activations of some layer. 
 
-## 3. Units of: $\phi(x)$
+### 3. Units of: $\phi(x)$
 To analyse a neural network, you look at the activations of a hidden unit as a meaninigful feature. You hunt for input images which maximize the activation of this single feature(i.e. unit).
 
 "Basis" of some subspace V is that set of vectors which are independent and span V. If these are orthonormal, then it is called the "standard basis". 
 
 Turns out, you will find semantically related images for any random basis. And you will not always find semantically similar images. 
 
-## 4. Blind spots
+### 4. Blind spots
 Main result is that the for deep neural networks, the smoothness assumption that underlies many of the kernel methods does not hold true. 
 
 Some optimisation stuff in the approach - i'll come back to this later if I have to.
@@ -41,7 +40,7 @@ Some optimisation stuff in the approach - i'll come back to this later if I have
 ---
 
 
-# 2. Explaining and harnessing adverarial examples - Goodfellow and Szegedy (2015)
+# Explaining and harnessing adverarial examples - Goodfellow and Szegedy (2015)
 They argue that the primary cause for vulnerability to adversarial perturbations is the linearity of the networks. This "linear" views enables a fast method for generating adversarial examples. 
 
 Let $\theta$ be the parameters of the model, $x$ be the input to the model, $y$ be the targets for $x$ and $J(\theta, x, y)$ be the cost used to train the network. 
@@ -85,7 +84,7 @@ Next steps:
 
 # Literature Review
 
-## Audio Adversarial Examples: Targeted Attacks on Speech-to-Text (https://arxiv.org/pdf/1801.01944.pdf - 2018)
+### Audio Adversarial Examples: Targeted Attacks on Speech-to-Text (https://arxiv.org/pdf/1801.01944.pdf - 2018)
 - Some work done for discrete signals (like text/nlp adversarial for reading comprehension https://arxiv.org/pdf/1707.07328.pdf). It's primitive yet effective.
 - Constructing targeted audio attacks is tough.
 - Carlini (USENIX 2016 https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_carlini.pdf) creates stealth audio but it's just heavily distorted sound.
@@ -111,7 +110,7 @@ Biggest opportunities:
 3. Check for transferrability across tasks and architectures?
 
 
-## Hidden Voice Commands (https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_carlini.pdf - 2016)
+### Hidden Voice Commands (https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_carlini.pdf - 2016)
 1. Black box attack: Not Useful since it requires a HIL component.  
 2. White box attack: Underlying system is CMU Sphinx (voice->MFCC->13-dim vector->1st+2nd derivatives->39-dim vector->GMM->HMM->phenomes to probability over words)
 Simple attack: find a target MFCC (y) , objective --> f(x) = (MFCC(x) - y)^2. Results not better than black box attack. 
@@ -119,7 +118,7 @@ Improved attack: "First,rather than targeting a specific sequence of MFCCvectors
 A lot of hand-tuning was used in this code. 
 
 
-## Crafting Adversarial Examples For Computational Paralinguistic Applications (OHYEAH) (https://arxiv.org/pdf/1711.03280.pdf - November 2017)
+### Crafting Adversarial Examples For Computational Paralinguistic Applications (OHYEAH) (https://arxiv.org/pdf/1711.03280.pdf - November 2017)
 - look at how they present the results/differences in the audio wavforms.
 - they chose not to show decible noise difference even though Carlini's work was before their's???
 
@@ -148,10 +147,7 @@ Experiemtns on 3 para-linguistic tasks : Gender recognition(binary), Emotion rec
 Interesting notes on the perturbation: Perturbation on raw waveform is small er in magnitude than perturbation on featurebased methods. The perturbation on raw waveform (henceforth called pertraw) sounds like "normal" noise. Humans have no problem performing the 3 para-linguistic tasks with pertraw added to the original signal, but it wreaks havoc on the the deep nn. If we compare spectograms of the original and adversarial example, pertraw covers all of the available spectrum, meaning it might be immune to simple filtering based defences. 
 
 
-## Kereliuk,  C.;  Sturm, B. L.; and Larsen, J.  2015.  Deep learning and music  adversaries. (same link repeated at the end).
-
-
-## Did you hear that? Adversarial Examples Against Automatic Speech Recognition (OHYEAH)(https://arxiv.org/pdf/1801.00554.pdf - 2018)
+### Did you hear that? Adversarial Examples Against Automatic Speech Recognition (OHYEAH)(https://arxiv.org/pdf/1801.00554.pdf - 2018)
 **Problem to attack**: Tensorflow Dataset of Keyword spotting 
 **Base model**: Based on model by "Convolutional neural networks for small-footprint keyword spotting" which is the model used in the tutorial. It is MFCC based. 
 **Attack method**: Non-gradient based Genetic ALgorithm, basically, keep mutating the x (input) (original benign audio clip), till you hit f(x_adv) == new target. 
@@ -161,25 +157,25 @@ Interesting notes on the perturbation: Perturbation on raw waveform is small er 
 - the system appears to be biassed since it's not trained to detect noise
 - "recruited" 23 "participants" to evaluate quality of attacked samples.
 
-## Generating Adversarial Examples for Speech Recognition (http://web.stanford.edu/class/cs224s/reports/Dan_Iter.pdf - 2017)
+### Generating Adversarial Examples for Speech Recognition (http://web.stanford.edu/class/cs224s/reports/Dan_Iter.pdf - 2017)
 Target - automatic speech recognition systems (ASR)
 Model - WaveNet (pre-trained) , inputs are MFCC features. 
 create features in MFCC domain, invert them back to sound domain. 
 Method: FGSM and Fooling gradient sign method. On both single work outputs and sentences. 
 
-## An Overview of Vulnerabilities of Voice Controlled Systems (https://arxiv.org/pdf/1803.09156.pdf - 24th March 2018)
+### An Overview of Vulnerabilities of Voice Controlled Systems (https://arxiv.org/pdf/1803.09156.pdf - 24th March 2018)
 There is a section on ML adversarial method based attacks that mentions 3 papers: 
 1. Carlini and D. Wagner, “Audio adversarial examples: Targeted attacks on speech-to-text --> Deepspeech targeted attack. 
 2. Paralinguistics paper --> adversarial examples can misclassify gender and  identity of the speaker. 
 3. Houdini Paper --> Show that adversarial attacks are transferable to unknown and different ASR models. 
 Only the first paper mentions that over-the-air attack is not possible, 2nd and 3rd paper says nothing aboutover-the-air attack performance. 
 
-## Deep Learning and Music Adversaries ; music content analysis (https://arxiv.org/pdf/1507.04761.pdf - 2015)
+### Deep Learning and Music Adversaries ; music content analysis (https://arxiv.org/pdf/1507.04761.pdf - 2015)
 - Main experiments are over music genre identification.
 - CDNN model with softmax output and spectogram features (STFT). Initial convolutional windows are of (400 x 4). Reason for long rectangular windows is to capture strong harmonic structures which span the audible spectrum. 
 - Modification of the Sedgezy's line-search approach; cause for failure of original was inability to correctly back-map to time domain. They use the Griffin-Lim algorithm to project the adversarial example back to time domain. An updated and "available" version of the algorimth is here - https://perraudin.info/publications/perraudin-note-002.pdf
 
-## Adversarial Diversity and Hard Positive Generation ; a new way to generate diverse adversarial samples(https://arxiv.org/pdf/1605.01775.pdf - 2016)
+### Adversarial Diversity and Hard Positive Generation ; a new way to generate diverse adversarial samples(https://arxiv.org/pdf/1605.01775.pdf - 2016)
 Main contributions:
 - Introduced PASS to quanify adversarial images.
 - New approach to generate large number of adversarial images.
@@ -204,10 +200,7 @@ Our goal is to produce perturbation $\eta$ such that $\tilde x = x + \eta$ is mi
 
 **Hot/Cold** aims to consider derivatives w.r.t. other layers in order to augment the overfit decision boundaries created by naturally moving towards a specific targetted class.
 
-
-
-
-# HOLY GRAIL - Raw Waveform-based Audio Classification Using Sample-level CNN Architectures (https://arxiv.org/pdf/1712.00866.pdf - 2017)
+### HOLY GRAIL - Raw Waveform-based Audio Classification Using Sample-level CNN Architectures (https://arxiv.org/pdf/1712.00866.pdf - 2017)
 
 - Lower layers while using raw-waveforms should be able to identify all possible phase-variations of periodic waveforms. Think of a sine wave shifted *right* along time; this will probably make no difference to a mel-spectogram but can cause issues with time-domain analysis. Frequency domain techniques are invariant to phase variations within a frame since they only look at the frequency magnitude.
 - This problem is analogus to "translational invariance" in image domain. For sound detection and auto-tagging, authors used VGG-style 1D CNN models. These turned out to be very effective. 
