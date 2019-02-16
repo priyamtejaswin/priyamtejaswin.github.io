@@ -7,20 +7,17 @@ excerpt: "Review of recent approaches in literature for estimating/predicting th
 Review of recent approaches in literature for estimating/predicting the link/trip travel time.
 
 ## Core References
-1. Link Travel Time Prediction from Large Scale Endpoint Data (SIGSPATIAL 2017) - https://dl.acm.org/citation.cfm?id=3140006
-2. Probabilistic estimation of link travel times in dynamic road networks (SIGSPATIAL 2015) - https://infolab.usc.edu/DocsDemos/mohammad_1_2015.pdf
-3. Non-Parametric Estimation of Route Travel Time Distributions from Low-Frequency Floating Car Data (Transportation Research Part C: Emerging Technologies, 2015) - https://people.kth.se/~jenelius/RJK_2014.pdf
-4. T-Drive: Driving Directions Based on Taxi Trajectories (SIGSPATIAL 2016) : https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/T-Drive-20Driving20Directions20Based20on20Taxi20Traces.pdf
-5. Urban Link Travel Time Estimation Using Large-scale Taxi Data with Partial Information (Transportation Research Part C: Emerging Technologies, 2013) : http://dimacs.rutgers.edu/archive/Workshops/HumanEnvironments/Slides/zhan.pdf  **This is the PPE baseline in Link1! IGNORE!**
-6. A Bayesian Mixture Model for Short-term Average Link Travel Time Estimation Using Large-scale Limited Information Trip-based Data (Automation in Construction, 2015) : Users/tejaswin.p/Downloads/1-s2.0-S0926580515002472-Xianyuan_Zhan_Path_inference_2015.pdf
-7. A simple baseline for travel time estimation using large-scale trip data (SIGSPATIAL 2016) : https://dl.acm.org/citation.cfm?id=2996943 (**in progress** - was ignored by other papers for some reason...)
-8. Travel Time Estimation of a Path using Sparse Trajectories (KDD 2014) : https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/frp0557-zheng1.pdf
-9. When Will You Arrive? Estimating Travel Time Based on Deep Neural Networks (AAAI 2018) : https://www.microsoft.com/en-us/research/uploads/prod/2018/01/travel-time-estimation-dnn.pdf
-10. Arriving on time: estimating travel time distributions on large-scale road networks (2013) : http://jackdreilly.github.io/papers/bestroute.pdf
+1. Link Travel Time Prediction from Large Scale Endpoint Data (SIGSPATIAL 2017) - <https://dl.acm.org/citation.cfm?id=3140006>
+2. Probabilistic estimation of link travel times in dynamic road networks (SIGSPATIAL 2015) - <https://infolab.usc.edu/DocsDemos/mohammad_1_2015.pdf>
+3. Non-Parametric Estimation of Route Travel Time Distributions from Low-Frequency Floating Car Data (Transportation Research Part C: Emerging Technologies, 2015) - <https://people.kth.se/~jenelius/RJK_2014.pdf>
+4. T-Drive: Driving Directions Based on Taxi Trajectories (SIGSPATIAL 2016) : <https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/T-Drive-20Driving20Directions20Based20on20Taxi20Traces.pdf>
+5. A simple baseline for travel time estimation using large-scale trip data (SIGSPATIAL 2016) : <https://dl.acm.org/citation.cfm?id=2996943> (**in progress** - was ignored by other papers for some reason...)
+6. When Will You Arrive? Estimating Travel Time Based on Deep Neural Networks (AAAI 2018) : <https://www.microsoft.com/en-us/research/uploads/prod/2018/01/travel-time-estimation-dnn.pdf>
+7. Arriving on time: estimating travel time distributions on large-scale road networks (2013) : <http://jackdreilly.github.io/papers/bestroute.pdf>
 
 ---
 
-## 1. Link Travel Time Prediction from Large Scale Endpoint Data (SIGSPATIAL 2017) - https://dl.acm.org/citation.cfm?id=3140006
+## 1. Link Travel Time Prediction from Large Scale Endpoint Data (SIGSPATIAL 2017) - <https://dl.acm.org/citation.cfm?id=3140006>
 - Tries to estimate the link times when link times are not given; only the TOTAL TRIP TIME is given.
 - Uses NYC Cab Data.
 - Procedure:
@@ -28,7 +25,7 @@ Review of recent approaches in literature for estimating/predicting the link/tri
     - Eliminate *ambiguous* trips (i.e. trips with more than 1 possible path, since multiple paths are possible).
     - The average link time $x_k$ is the expected value of the link travel times.
     - The average trip time $T_p$ is the expected value of all the trip times.
-    - Minimize $AX - T$ where $A$ is (|$links$|x|$trips$|)coefficient matrix: value of $A_kp$ is 1 if link $k$ exists in trip $p$, else 0.
+    - Minimize $AX - T$ where $A$ is (\|$links$\|x\|$trips$\|)coefficient matrix: value of $A_kp$ is 1 if link $k$ exists in trip $p$, else 0.
     - Add non-negative constraint (nnls) for ensuring that estimated link times are >= 0. **THIS WAS AN ISSUE WITH THE BASELINE MODEL PPE.**
     - Only baseline is a PPE model which correlates the trip times with the fare data and tries to estimate the link time.
     - Other models were skipped - paper claimed they were "infeasible" and "would not scale to large networks".
@@ -41,7 +38,7 @@ We already have the "link" data for different trips - initial approach could jus
 
 My hunch is that the hop travel times for these cuts should be consistent; trip travel time variations in NYC were in order of a 2-3 minutes. *We* will be averaging travel times on highways. I suspect the variability in the SLA is coming from the assests and not the connections.
 
-## 2. Probabilistic estimation of link travel times in dynamic road networks (SIGSPATIAL 2015) - https://infolab.usc.edu/DocsDemos/mohammad_1_2015.pdf
+## 2. Probabilistic estimation of link travel times in dynamic road networks (SIGSPATIAL 2015) - <https://infolab.usc.edu/DocsDemos/mohammad_1_2015.pdf>
 
 - Core task is to predict the travel time over a route *probabilistically*. Innovation is to estimate link travel times and then combine these for a route.
 - Travel times conditioned only on the link enterance time. 
@@ -64,7 +61,7 @@ My hunch is that the hop travel times for these cuts should be consistent; trip 
 Again, provided we frame the problem in a similar manner - predict travel times given the enterance times - I belive we should be good.
 
 
-## 3. Non-Parametric Estimation of Route Travel Time Distributions from Low-Frequency Floating Car Data (Transportation Research Part C: Emerging Technologies, 2015) - https://people.kth.se/~jenelius/RJK_2014.pdf
+## 3. Non-Parametric Estimation of Route Travel Time Distributions from Low-Frequency Floating Car Data (Transportation Research Part C: Emerging Technologies, 2015) - <https://people.kth.se/~jenelius/RJK_2014.pdf>
 
 - Core task is to *route travel time estimation*.
 - Uses FCD - low frequency GPS car data.
@@ -97,7 +94,7 @@ Again, provided we frame the problem in a similar manner - predict travel times 
 
 Not quite sure what to make of this approach. Final trip time is once again, a weighted mean. Some clever ideas to weight different trip times and also remove certain observational biases. Once again, this paper also stresses on the importace of the departure-time. While the bulk of the data is the consignment/gate time, TMS has started to record GPS data from trucks... could be useful there, but we'll have to solve some very basic problems like map-matching before that. *Also applies to the FE gps data from the OLD app which is still being captured but not used.*
 
-## 4. T-Drive: Driving Directions Based on Taxi Trajectories (SIGSPATIAL 2016) : https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/T-Drive-20Driving20Directions20Based20on20Taxi20Traces.pdf
+## 4. T-Drive: Driving Directions Based on Taxi Trajectories (SIGSPATIAL 2016) : <https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/T-Drive-20Driving20Directions20Based20on20Taxi20Traces.pdf>
 
 *Alt Title:* **How to incorporate driver intelligence for suggesting fastest routes b/w 2 points.**
 
@@ -124,7 +121,10 @@ Notes
     - Section 4.2 (with figure) for graph construction.
     - **VE-clustering to automatically split the time.**
 
-![](https://i.imgur.com/hWmM0Fd.png)
+<div class="post-image">
+<img src="/assets/images/link-prediction-tdrive.png">
+<p><em><font size="-1">Graph consitruction for T-Drive.</font></em></p>
+</div>
 
 2. VE-clustering:
     - sort all travel times for a edge
@@ -140,4 +140,4 @@ Notes
     - Beijing. 105k nodes, 141k road segments; 33,000 taxi trajectories over 3 months.
     - In Field 1 - same driver traverses routes at different times. (360 paths over 10 days)
     - In Field 2 - two drivers follow different routes to the same location AT THE SAME TIME. (60 paths over 6 days)
-    - Measure R1 is \% of times TDrive was better than baseline (Google). Measure R2 is extent to which it is better. 
+    - Measure R1 is % of times TDrive was better than baseline (Google). Measure R2 is extent to which it is better. 
