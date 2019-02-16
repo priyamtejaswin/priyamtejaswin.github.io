@@ -83,7 +83,10 @@ Again, provided we frame the problem in a similar manner - predict travel times 
 
 - **Transformation**
     - Transform the raw GPS data into an *instance* of route travel. Once the data is mapped onto a physical road network, you group/concat observations of the same trip into a *trace*.
-    - ![](https://i.imgur.com/rFXvFiZ.png)
+    <div class="post-image">
+        <img src="/assets/images/link-prediction-nonparam.png">
+        <p><em><font size="-1">Floating point data and in the road network.</font></em></p>
+    </div>
     - The figure above shows multiple *traces*: 1-3, 1-4, 2-3 and 2-4. The paper proposes to use the trace which has the highest weight as defined by a kernel function.
     - Other steps in **Transformation** are to account for GPS observations which partially cover adjacent routes (*allocation*); or when the start-time is not known (*route entry extrapolation*); 
     - The final output of this step is some scaled travel-time for the selected *trace*. This is ONE single instance of a route travel-time observation, $T_i$.
