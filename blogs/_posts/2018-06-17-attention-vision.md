@@ -1,18 +1,18 @@
 ---
 layout: post
-title: "[Notes] Attention in Vision."
+title: "[Notes] Neural Attention in Vision"
 excerpt: "Trying to understand attention-based vision systems."
 ---
 
 In the DeViSE project, we wanted to achieve something similar to what these papers explore. Except we took a completely different route (the Github README should explain things).
 
 This post briefly covers the following papers on "attention-based" vision systems.
-- base InfoGan paper (2016 - Chen, Duan and OpenAI folks) : https://arxiv.org/pdf/1606.03657.pdf
-- Understanding mutual-info in context of InfoGan (2016 - Evidoma, Drozdov; NYU folks) : https://kevtimova.github.io/docs/Drozdov_Evtimova.pdf
+- base InfoGan paper (2016 - Chen, Duan and OpenAI folks) : <https://arxiv.org/pdf/1606.03657.pdf>
+- Understanding mutual-info in context of InfoGan (2016 - Evidoma, Drozdov; NYU folks) : <https://kevtimova.github.io/docs/Drozdov_Evtimova.pdf>
 
-## Paper reviews
+---
 
-### Understanding mutual-info in context of InfoGan (2016 - Evidoma, Drozdov; NYU folks) : https://kevtimova.github.io/docs/Drozdov_Evtimova.pdf
+### Understanding mutual-info in context of InfoGan (2016 - Evidoma, Drozdov; NYU folks) : <https://kevtimova.github.io/docs/Drozdov_Evtimova.pdf>
 
 Learning to generate images with task-specific codes.
 
@@ -33,7 +33,7 @@ Some conclusions from the final section:
 
 ---
 
-### InfoGan paper (2016 - Chen, Duan and OpenAI folks) : https://arxiv.org/pdf/1606.03657.pdf
+### InfoGan paper (2016 - Chen, Duan and OpenAI folks) : <https://arxiv.org/pdf/1606.03657.pdf>
 
 - Learning dis-entangled representations which represent salient attributes of data is useful for downstream tasks. 
 - These dis-entangled representations might allocate separate dimensions for different facial attributes like eyes, color, hair color, etc.
@@ -52,17 +52,17 @@ Mutual information $I(X; Y)$ measures the amount of information learned about va
 $$
 I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)
 $$
-This gives an interpretable definition : the reduction of uncertainity in $X when $Y$ is observed. 
+This gives an interpretable definition : the reduction of uncertainity in $X$ when $Y$ is observed. 
 
-- Calculating $I(c; G(z,c))$ directly involves calculating the posterior $P(c|x)$. Instead, we introduce an auxilary function $Q$ and aim to estimate the variational lowerbound $L_I(G, Q)$.
-- In practice, $Q$ is a neural network which shares all convolutional layers with $D$ except for final layer which outputs parameters for $Q(c|x)$. 
+- Calculating $I(c; G(z,c))$ directly involves calculating the posterior $P(c\|x)$. Instead, we introduce an auxilary function $Q$ and aim to estimate the variational lowerbound $L_I(G, Q)$.
+- In practice, $Q$ is a neural network which shares all convolutional layers with $D$ except for final layer which outputs parameters for $Q(c\|x)$. 
     - For categorical codes, use a softmax.
     - For continuous, use a factored gaussian.
 - Convergence is faster than normal GAN.
 
 ---
 
-# (digression) A brief history of attention ...
+## (digression) A brief history of attention ...
 
 An attention mechanism/block takes in $n$ arguments $y_1, y_2, ...y_n$ and a context $c$. It returns a vector $z$ summarizing all inputs while giving more weight to the inputs which are more important given the context.
 
