@@ -1,17 +1,15 @@
 ---
 layout: post
-title: "[Notes] Isolation Forests"
+title: "[Notes] Isolation Forests for Anomaly Detection"
 excerpt: "Yet another deep-dive in finding a `catch-all` anomaly detection algorithm."
 ---
 
-Twitter has some research on using a hybrid-STL model for "general" anomaly detection. It's "general" in that the model works on application and system metrics. I felt however, that it's still too involved. ISF (despite some of it's structural flaws) seems more promising and intuitive, while also being applicable to a wide array of datasets out-of-the-box.
-
 ## References
-1) Liu, Fei Tony, Ting, Kai Ming and Zhou, Zhi-Hua. “Isolation forest.” Data Mining, 2008. ICDM‘08 : https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf
-2) Liu, Fei Tony, Ting, Kai Ming and Zhou, Zhi-Hua. “Isolation-based anomaly detection.” ACM Transactions on Knowledge Discovery from Data (TKDD) : https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/tkdd11.pdf
-3) S Guha, N Mishra, G Roy, O Schrijvers. "Robust Random Cut Forest Based Anomaly Detection On Streams" ICML 2016 : http://proceedings.mlr.press/v48/guha16.pdf
+1. Liu, Fei Tony, Ting, Kai Ming and Zhou, Zhi-Hua. “Isolation forest.” Data Mining, 2008. ICDM‘08 : <https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf>
+2. Liu, Fei Tony, Ting, Kai Ming and Zhou, Zhi-Hua. “Isolation-based anomaly detection.” ACM Transactions on Knowledge Discovery from Data (TKDD) : <https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/tkdd11.pdf>
+3. S Guha, N Mishra, G Roy, O Schrijvers. "Robust Random Cut Forest Based Anomaly Detection On Streams" ICML 2016 : <http://proceedings.mlr.press/v48/guha16.pdf>
 
-## 1) Isolation Forest (base paper) [ICDM 2008] https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf
+## 1) Isolation Forest (base paper) [ICDM 2008] <https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf>
 
 ### Introduction
 - Differs from standard practice of profiling normal samples and *then* identifying the anomalies. **This tries to isolate anomalies instead of profiling the normal points.**
@@ -43,7 +41,10 @@ Twitter has some research on using a hybrid-STL model for "general" anomaly dete
 - Anomalous points are likely to get partitioned quickly and easily. Normal points (by density or similarity) are more likely to be 'closer' and hence will have longer paths to separation.
 - The ensemble of trees helps.
 
-![](https://i.imgur.com/ZY2EESk.png)
+<div class="post-image">
+        <img src="/assets/images/isf-cuts.png">
+        <p><em><font size="-1">Floating point data and in the road network.</font></em></p>
+</div>
 
 ### Isolation Tree
 - $T$ is a node of an isolation tree. It is either a leaf-node, or an internal node containing one test and EXACTLY two daughter nodes ($T_l$, $T_r$).
@@ -52,7 +53,7 @@ Twitter has some research on using a hybrid-STL model for "general" anomaly dete
 - Procedure to build iTree:
     - Recursively divide $X$ by randomly selecting an attribute $q$ and a split value $p$ until termination cases:
         - Tree reaches height limit, or
-        - $|X| = 1$, or
+        - $\|X\| = 1$, or
         - All data in $X$ has the same values.
 
     - If all instances are unique, then every instance will have a leaf node.
