@@ -1,13 +1,19 @@
 ---
 layout: post
-title: "[Notes] Generative Adversarial Networks"
+title: "[Notes] Understanding Generative Adversarial Networks"
 excerpt: "The GAN model deep-dive with do's and don'ts."
+mathjax: true
 ---
 
 How could one possibly ignore all the hype? This is being used in everything from images to audio and even [e-commerce](https://arxiv.org/pdf/1801.03244.pdf)! These are my notes from [original 2014 GAN paper](https://arxiv.org/pdf/1406.2661.pdf) and the excellent [NIPS tutorial in 2016](https://arxiv.org/pdf/1701.00160.pdf).
 
-# GAN: to dos and to don'ts
-![gan-blocks](https://i.imgur.com/p8z9vVz.png)
+*The headings have section numbers which correspond to the NIPS Tutorial document.*
+
+<div class="post-image">
+    <img src="/assets/images/gan-model.png">
+    <p><em><font size="-1">GAN block diagram.</font></em></p>
+</div>
+
 ## 3.1 The GAN framework
 - Setup game between 2 playes : generator and discriminatior.
 - Generator creates samples which should belong to the same distribution as the training data. Discriminator is supposed to distinguish the real from the fake.
@@ -67,11 +73,14 @@ $$
 
 ## 3.2.5 Choice of divergence important?
 
-KL(data || model) vs KL(model || data) ?? ***refer the tutorial section 3.2.5 again later.***
+KL(data \|\| model) vs KL(model \|\| data) ?? ***refer the tutorial section 3.2.5 again later.***
 
 ## 3.3 The DCGAN
 
-![dcgan](https://i.imgur.com/0uMLxUf.png)
+<div class="post-image">
+    <img src="/assets/images/dcgan-diag.png">
+    <p><em><font size="-1">Deep Convolutional Generative Adversarial Network diagram.</font></em></p>
+</div>
 
 - Batch-norm for D and G seprately. 
 - Last layer of G and first layer of D are not batch-normed so that the model can learn the correct mean and scale of the data.
@@ -126,19 +135,3 @@ Nothing much.
 Nothing much.
 
 That's all folks!
-
-# About adversarial examples
-- Goodfellow 2014 (Intriguing properties of neural networks) https://arxiv.org/pdf/1312.6199.pdf
-- Goodfellow 2015 (Explaining Adversarial Examples) https://arxiv.org/pdf/1412.6572.pdf
-- Check Fast Gradient Sign Method and the cross-sectional adversarial map
-![adv-cross](https://i.imgur.com/P6MQMVi.png)
-
-![](https://i.imgur.com/RbduSrE.png)
-
-- The goal of FGSM is to identify a vector which has a high enough dot product. The problem with random vectors is that the dot product will be 0 on average.
-- Estimating subspace Tramer et al. (2017)
-- Breaking Linear Classifiers on ImageNet - Karpathy
-- Adversarial examples generalize to different training sets and different models.
-- Transferability Attacks
-- Virtual adversarial training??
-- 
