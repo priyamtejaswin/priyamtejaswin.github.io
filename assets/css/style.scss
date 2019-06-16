@@ -4,6 +4,11 @@
 
 @import "minima";
 
+.post-content > h1, h2, h3, h4 {
+    margin-top: 35px;
+    margin-bottom: 5px;
+}
+
 .post-meta {
     font-size: 14px;
     color: #828282; }
@@ -14,10 +19,6 @@
     margin-top: -7px; }
 
 .project-data > h3,
-li > h3 {
+.post-list > li > h3 {
+    margin-top: 0px; 
     margin-bottom: 0px; }
-
-.post-content > h1, h2, h3, h4 {
-    margin-top: 35px;
-    margin-bottom: 5px;
-}
