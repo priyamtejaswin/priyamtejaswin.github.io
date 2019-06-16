@@ -17,9 +17,8 @@ minima:
 # If you want to link only specific pages in your header, uncomment
 # this and add the path to the pages in order as they should show up
 header_pages:
-- index.md # This has been repurposed to be `about.md` because index.md is the landing page.
+- about.md # This has been repurposed to be `about.md` because index.md is the landing page.
 - project.md # Empty blog file with all the "project" posts.
-- blog.md # Empty blog file with all the "blog" posts.
 
 # Build settings
 theme: minima
