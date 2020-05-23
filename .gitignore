@@ -3,6 +3,7 @@
 Gemfile.lock
 _site
 *.gem
+*.vscode
 
 projects/_posts/2018-12-20-zeroth-project.md
 *.DS_Store
