@@ -15,12 +15,6 @@ the word $\text{"dogs"}$ could be mapped to a noun or a verb. A naive (singular)
 The specific algorithm that we'll explore is presented in [Discriminative Training Methods for Hidden Markov Models: Theory and Experiments with Perceptron Algorithms](https://www.aclweb.org/anthology/W02-1001.pdf), published by [Michael Collins](http://www.cs.columbia.edu/~mcollins/) in EMNLP 2002. This paper was awarded the [ACL Test-of-Time Award in 2018](https://naacl2018.wordpress.com/2018/03/22/test-of-time-award-papers/).
 
 # Data
-```bash
-1. Write about specific problem.
-2. Link to data, describe it.
-3. Tid-bit about the PennTree bank, and how expensive it is.
-4. Some notation about the data.
-```
 The task at hand is [Part-Of-Speech Tagging](https://en.wikipedia.org/wiki/Part-of-speech_tagging). Every input token ($\text{The}$) is tagged with its appropriate part-of-speech ($\text{DT/Determiner}$). Part-of-speech tags are essential input features for many statistical NLP models.
 
 Such "paired" data is our input. The task is to learn a model that can accurately predict the tags for a new sequence of words.
@@ -75,7 +69,7 @@ def get_clean_line(line):
 
 I use `def get_clean_line` to generate `word/tag` sequences. This function reads a line, stores the tokens and their respective tags in separate lists, and returns them.
 
-> I am choosing to convert everything to lower-case, and also ignore the punctuation. These are probaly valuable features, but we can do without them for this implementation.
+> I am converting everything to lower-case, and also ignoring the punctuation. These are probaly valuable features, but we can do without them for this implementation.
 
 **Fun-fact**: You know that "Penn TreeBank" which keeps popping up everywhere in NLP literature? I just assumed that a dataset so oft-cited *must* be free. Turns out it costs \\$1700 for non-members, and \$850 for a "reduced license"...
 
@@ -85,6 +79,41 @@ I use `def get_clean_line` to generate `word/tag` sequences. This function reads
 2. Modify to Collins Perceptron.
 3. Add code nippets if/where appropriate.
 ```
+Before the **Structured Perceptron**, let's have a look at the Perceptron Classifier.
+
+## Perceptron Algorithm
+Our training samples are pairs of sequences $(x, y)$. Consider a different task where we predict a label $y$ for input $x$. We define a linear function $f(x, y)$ as 
+
+$$
+f(x, y) = \phi(x, y).\bar{\alpha}
+$$
+
+$\phi(x, y)$ returns a feature vector for an input sequence $x$, and a candidate label $y$. A simple set of features could be the presence of a token with a class label. $\bar{\alpha}$ is the paramater vector for our features. Dot-product of these vectors returns a score. Since the input $x$ is fixed, the predicted label, $\hat{y}$, will be the label $y$ which returns the highest score.
+
+$$
+\begin{align}
+\hat{y} &= \text{argmax}_y\ f(x, y) \\
+&= \text{argmax}_y\ \phi(x, y).\bar{\alpha}
+\end{align}
+$$
+
+To train this classifier, we loop over each training sample, predicting the class-label $\hat{y}$ and comparing it to the training label $y$. If these match, it means our current paramter values for $\bar{\alpha}$ *suffice* and need not be updated.
+If they don't, then we update.
+
+## Structured Perceptron
+Now, instead of predicting the most probable label, we'll try to *generate* the most likely sequence of POS-tags.
+
+$$
+\begin{align}
+\hat{y} &= \text{argmax}_{y \in \text{GEN}(x)}\ \phi(x, y).\bar{\alpha} \\
+\end{align}
+$$
+
+This looks quite similar, but there are two differences:
+1. The function $\phi$ is a joint function that maps input tokens $x$ *and* the labels *y* to a fixed length vector.
+2. We consider the prediction $\hat{y}$ over the *sequence* of possible labels for all tokens in $x$ (captured in $\text{GEN}(x)$); as opposed to all possible labels for a single token.
+
+The 2nd point is critical: consider a sequence of $N$ tokens with $S$ possible labels. In the previous formulation, search space over $\hat{y}$ was simple $N \times S$. Here, exhaustive search will be of the order $S^N$!
 
 # Code
 
