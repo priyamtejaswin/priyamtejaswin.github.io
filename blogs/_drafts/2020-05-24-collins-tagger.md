@@ -93,13 +93,13 @@ The full set of labels is available in the Brown Corpus. For the moment, assume 
 
 ```python
 [
-    # Uni-gram features: check for occurrance of a token with a label.
+    # Uni-gram features: check for occurrence of a token with a label.
 0: the_DT
 1: small_JJ
 2: dog_N
 3: is_BBB
 4: barking_VBG
-    # Bi-gram features: check for occurrance of token pairs with a label.
+    # Bi-gram features: check for occurrence of token pairs with a label.
 5: <start>_the_DT
 6: the_small_JJ
 7: small_dog_N
@@ -133,7 +133,7 @@ If $\hat{y}_i$ and $y_i$ match, then the weights are not updated. Else, they are
 
 
 ## Structured Prediction
-Now, instead of predicting the most probable label, we'll try to generate the most likely *sequence* of POS-tags.
+Now, instead of predicting the most probable label for each token, we'll try to generate the most likely *sequence* of POS-tags.
 
 $$
 \begin{align}
@@ -141,11 +141,42 @@ $$
 \end{align}
 $$
 
-This looks quite similar, but there are two differences:
-1. The function $\phi$ is a joint function that maps input tokens $x$ *and* the labels *y* to a fixed length vector.
-2. We consider the prediction $\hat{y}$ over the *sequence* of possible labels for all tokens in $x$ (captured in $\text{GEN}(x)$); as opposed to all possible labels for a single token.
+This looks quite similar, but there are some differences.
 
-The 2nd point is critical: consider a sequence of $N$ tokens with $S$ possible labels. In the previous formulation, search space over $\hat{y}$ was simple $N \times S$. Here, exhaustive search will be of the order $S^N$!
+$\phi$ **maps squences to a feature vector.**
+
+The function $\phi$ is a joint function that maps input tokens $x$ *and* the labels *y* to a fixed length vector. It accepts the entire input sequence and a candidate label sequence. Our function $f$ is now returning a score for a pair of sequences.
+
+$$
+f(x, y) = \phi(x, y) . \bar{\alpha}
+$$
+
+Expanding the dot product, we observe
+
+$$
+f(x, y) = \phi(x, y) = \sum_{i}^t \sum_{s}^n \bar{\alpha}_s . \phi_s(h_i, y_i)
+$$
+
+Collins' paper defines $h_i$ to be the "context history" with which the prediction iss made. It's defined as the tuple $(y_{-2}, y_{-1}, x_{1:n}, i)$, where $y_{-2}, y_{-1}$ are the tags for the last two tokens and $x_{1:n}$ is the trail of previous tokens. The paper also defines a global feature function $\Phi$
+
+$$
+\Phi_s(x, y) = \sum_i^t \phi_s(h_i, y_i)
+$$
+
+Since all features are binary, $\Phi_s$ simply counts all occurrences of the "local" feature $\phi_s$ in the sequence. With this defined, the scoring function $f(x, y)$ becomes:
+
+$$
+\begin{align}
+f(x, y) = \phi(x, y) . \bar{\alpha} &= \sum_{i}^t \sum_{s}^n \bar{\alpha}_s . \phi_s(h_i, y_i) \\
+&= \sum_s^n \bar{\alpha}_s . \Phi_s(x, y)
+\end{align}
+$$
+
+All that's left is to find the highest scoring sequence ... which brings us to the other thing.
+
+**Candidate** $\hat{y}$ **is an entire sequence.**
+
+We consider the prediction $\hat{y}$ over the *sequence* of possible labels for all tokens in $x$ (captured in $\text{GEN}(x)$); as opposed to all possible labels for a single token. For a sequence of $N$ tokens with $S$ possible labels, search space over $\hat{y}_i$ was $N \times S$ if we predicting labels independently for each token. Here, exhaustive search will be of the order $S^N$!
 
 ## Viterbi Decoding
 The process of generating possible tag sequences is also called decoding. Exhaustiv search is infeasible. A better option would be **Greedy Decoding**: you select the most probable label at for the current timestep, *fix it*, and then move on to the next timestep.
