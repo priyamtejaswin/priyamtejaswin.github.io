@@ -74,38 +74,70 @@ I use `def get_clean_line` to generate `word/tag` sequences. This function reads
 **Fun-fact**: You know that "Penn TreeBank" which keeps popping up everywhere in NLP literature? I just assumed that a dataset so oft-cited *must* be free. Turns out it costs \\$1700 for non-members, and \$850 for a "reduced license"...
 
 # Collins' Perceptron
-```bash
-1. Start by describing the simple perceptron.
-2. Modify to Collins Perceptron.
-3. Add code nippets if/where appropriate.
-```
-Before the **Structured Perceptron**, let's have a look at the Perceptron Classifier.
+Before the **Structured Perceptron**, let's have a look at the general Perceptron Algorithm.
 
 ## Perceptron Algorithm
-Our training samples are pairs of sequences $(x, y)$. Consider a different task where we predict a label $y$ for input $x$. We define a linear function $f(x, y)$ as 
+Our training samples are pairs of sequences $(x, y)$. Consider a different task where we predict a label $\hat{y_i}$ for input token $x_i$. We define a linear function $f(x_i, y_i)$ as 
 
 $$
-f(x, y) = \phi(x, y).\bar{\alpha}
+f(x_i, y_i) = \phi(x_{0:i}, y_i).\bar{\alpha}
 $$
 
-$\phi(x, y)$ returns a feature vector for an input sequence $x$, and a candidate label $y$. A simple set of features could be the presence of a token with a class label. $\bar{\alpha}$ is the paramater vector for our features. Dot-product of these vectors returns a score. Since the input $x$ is fixed, the predicted label, $\hat{y}$, will be the label $y$ which returns the highest score.
+$\phi$ returns a feature vector for an input sequence $x_{0:i}$, and a candidate label $y_i$. Usually, this is a binary feature generator. It accepts all input token leading up to $x_i$ -- you can also use tokens appearing ahead of $x_i$. This sequence of input tokens allows us to have bi-gram and tri-gram features associated with training class labels. Consider the following sequence of $\text{token/{label}}$ pairs:
+
+$$
+\text{<start> The/{DT} small/{JJ} dog/{N} is/{BBB} barking/{VBG} <end>}
+$$
+
+The full set of labels is available in the Brown Corpus. For the moment, assume our vocabulary of tokens and labels is limited to this sentence (along with `<start>` and `<end>`). One could define the feature vector of size $n$ in the following manner:
+
+```python
+[
+    # Uni-gram features: check for occurrance of a token with a label.
+0: the_DT
+1: small_JJ
+2: dog_N
+3: is_BBB
+4: barking_VBG
+    # Bi-gram features: check for occurrance of token pairs with a label.
+5: <start>_the_DT
+6: the_small_JJ
+7: small_dog_N
+8: dog_is_BBB
+# ...
+]
+```
+With this, the feature vector for the first token ($\text{the}$) will have $1$ in positions 0 and 5, with the rest being zero.
+
+$\bar{\alpha}$ is the paramater vector for our features -- it is also of size $n$. Dot-product of these vectors returns a score. Since the input $x_i$ is fixed, the predicted label, $\hat{y}_i$, will be the candidate label which gets the highest score.
 
 $$
 \begin{align}
-\hat{y} &= \text{argmax}_y\ f(x, y) \\
-&= \text{argmax}_y\ \phi(x, y).\bar{\alpha}
+\hat{y}_i &= \text{argmax}_{y_i}\ f(x_i, y_i) \\
+&= \text{argmax}_{y_i}\ \phi(x_{0:i}, y_i).\bar{\alpha}
 \end{align}
 $$
 
-To train this classifier, we loop over each training sample, predicting the class-label $\hat{y}$ and comparing it to the training label $y$. If these match, it means our current paramter values for $\bar{\alpha}$ *suffice* and need not be updated.
-If they don't, then we update.
-
-## Structured Perceptron
-Now, instead of predicting the most probable label, we'll try to *generate* the most likely sequence of POS-tags.
+To train this classifier, we loop over each training sample, predicting the label $\hat{y}_i$ and comparing it to the training label $y_i$. If these match, it means our current paramter values for $\bar{\alpha}$ *suffice* and need not be updated. If they don't, then we update. For each element $s < n$ in the vector,
 
 $$
 \begin{align}
-\hat{y} &= \text{argmax}_{y \in \text{GEN}(x)}\ \phi(x, y).\bar{\alpha} \\
+\bar{\alpha}_s  &= \bar{\alpha}_s + \phi_s(x_{0:i}, y_i) - \phi_s(x_{0:i}, \hat{y}_i) \\ \\
+& \text{Where} \\
+& y_i  \text{ is the gold label} \\
+& \hat{y}_i \text{ is the predicted label}
+\end{align}
+$$
+
+If $\hat{y}_i$ and $y_i$ match, then the weights are not updated. Else, they are increased/decreased appriopriately (+1/-1).
+
+
+## Structured Prediction
+Now, instead of predicting the most probable label, we'll try to generate the most likely *sequence* of POS-tags.
+
+$$
+\begin{align}
+\hat{y} &= \text{argmax}_{y \in \text{GEN}(x)}\ \phi(x, y).\bar{\alpha}
 \end{align}
 $$
 
@@ -115,13 +147,9 @@ This looks quite similar, but there are two differences:
 
 The 2nd point is critical: consider a sequence of $N$ tokens with $S$ possible labels. In the previous formulation, search space over $\hat{y}$ was simple $N \times S$. Here, exhaustive search will be of the order $S^N$!
 
-# Code
+## Viterbi Decoding
+The process of generating possible tag sequences is also called decoding. Exhaustiv search is infeasible. A better option would be **Greedy Decoding**: you select the most probable label at for the current timestep, *fix it*, and then move on to the next timestep.
 
-# HMM training
-```bash
-1. Mention complicated derivation.
-2. Explain this as alternative for training.
-```
 
 # Comment on evaluation/metrics
 ```bash
