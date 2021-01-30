@@ -172,6 +172,17 @@ f(x, y) = \phi(x, y) . \bar{\alpha} &= \sum_{i}^t \sum_{s}^n \bar{\alpha}_s . \p
 \end{align}
 $$
 
+The parameter update procedure remains the same; we swap the local feature, with the global $\Phi$ counts
+
+$$
+\begin{align}
+\bar{\alpha}_s  &= \bar{\alpha}_s + \Phi_s(x, y) - \Phi_s(x, \hat{y}) \\ \\
+& \text{Where} \\
+& y  \text{ is the gold label sequence} \\
+& \hat{y}_i \text{ is the candidate label sequence}
+\end{align}
+$$
+
 All that's left is to find the highest scoring sequence ... which brings us to the other thing.
 
 **Candidate** $\hat{y}$ **is an entire sequence.**
@@ -194,9 +205,77 @@ In the figure, this process is represented by the colours of the links. For each
 
 To generate the final sequence, we backtrack from the last timestep, selecting the most probable state assignments, through the most likely paths.
 
-# Comment on evaluation/metrics
-```bash
-1. How do we measure goodness.
-2. Why is this so slow.
-3. End.
+# The training loop
+My `main` function looks something like this
+```python
+@plac.annotations(
+    path_brown_corpus = ("Path to Brown Corpus dir.", 'positional', None, str)
+)
+def main(path_brown_corpus):
+    """
+    Runs Collins' averaged perceptron tagging algorithm.
+    """
+    print "Files dir:", path_brown_corpus
+
+    if not os.path.isdir(path_brown_corpus):
+        raise OSError("path_brown_corpus -- %s does not exist."%path_brown_corpus)
+
+    # Some code for loading the data ...
+    files = [os.path.join(path_brown_corpus, name) for name in 
+             os.listdir(path_brown_corpus) if len(name) == 4 and name[0] == 'c']
+    data = load_files(files[:50])
+    random.shuffle(data)
+
+    # Train/test split ...
+    tsplit = int(0.9 * len(data))
+    train_data, test_data = data[:tsplit], data[tsplit:]
+    print "Train seqs:", len(train_data)
+    print "Test  seqs:", len(test_data)
+
+    # Extract the bi-gram, uni-gram features for every (words, tokens) pair.
+    train_feats = [get_features(w, t) for w,t in tqdm(train_data)]
+    # `get_words_tags_weights` initializes the weights (wObs, wTags) and
+    # creates the index maps for tokens, tags.
+    word2ix, ix2word, tag2ix, ix2tag, wObs, wTags = get_words_tags_weights(train_feats)
+
+    train_loop(train_data, word2ix, tag2ix, ix2tag, wObs, wTags, test_data)
 ```
+
+and the `train_loop` looks something like this
+```python
+for outer in range(5):  # Or *epochs* if you're familiar with neural networks.
+    for wdseq, tgseq in tqdm(train_data):
+        counter += 1
+        if counter % 500 == 0:
+            # Code for computing stats on the test data.
+            ...
+
+        # Generate the most likely tag sequences with the current parameters.
+        tr_gold, tr_pred = forward(wdseq, tgseq, word2ix, ix2tag, wObs, wTags)
+        # The `forward` function returns the global features for the gold sequence 
+        # and the candidate sequence.
+        # These are passed to the `train_step` to update parameters.
+        obs_pos, tag_pos = train_step(tr_gold, tr_pred, word2ix, tag2ix)
+        for (r, c), v in obs_pos.items():
+            if v != 0:
+                wObs[r, c] += v  # `v` is the *net* change in the parameter value.
+
+        for (r, c), v in tag_pos.items():
+            if v != 0:
+                wTags[r, c] += v
+```
+
+# Closing thoughts
+Despite being  extremely simple, the Perceptron model can be a formidable baseline. There's an [excellent post by Matthew Honnibal](https://explosion.ai/blog/part-of-speech-pos-tagger-in-python) (founder and creator of [spaCy](https://spacy.io/)) where he writes an extremely accurate POS-Tagger in less than 200 lines. This achieves an accuracy of 97%.
+
+While I did not implement the full feature-set, I was curious to know how accurate my implementation was. But I was never really able to train it on the full dataset because of the decoder. It is *ridiculously* slow. 
+I could have made some performance improvements (and Honnibal covers some in his other posts). Also, some computation can also be trivially parallelized. For instance, you can decode each instance in the batch separately in a different thread, or using matrices if you write the code correctly. But even then, the $N \times S^2$ time complexity of the decoder will slow you down, especially when you start working with a huge number of tags. I could re-write the entire thing in C, but maybe I don't have to. After all, Spacy is in Python, and it is one of the fastest libraries out there.
+
+The trick (as championed by Spacy) is to implement all the bottlenecks in [Cython](https://cython.org/), a static compiler for Python code -- not to be confused with [CPython](https://github.com/python/cpython), which is the Python reference implementation you are probably using. But I'll leave that for a different post.
+
+#### Some important stuff I skipped 
+* The feature set that the paper uses is listed in [Ratnaparkhi, 1996](https://www.aclweb.org/anthology/W96-0213.pdf).
+* The parameter update should be averaged across a batch. This is discussed in detail in Sections 2.5 and 3.
+* I should be measuring F-measure, but I was too lazy.
+
+Feel free to raise PRs if you spot something's off!
