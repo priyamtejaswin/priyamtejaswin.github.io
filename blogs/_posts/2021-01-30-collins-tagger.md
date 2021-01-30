@@ -4,6 +4,15 @@ title: "The Structured Perceptron for Structured Prediction"
 excerpt: "Or, realising just how painfully slow Python can get."
 ---
 
+```
+tex2jax: {
+    inlineMath: [['$', '$'], ["\\(","\\)"]],
+    displayMath: [['$$', '$$'],['\\[','\\]']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+```
+
 **Structured Prediction** (or Structured Learning) deals with learning algorithms where the ouput is not a single value, but rather a *structured* object: sequence, tree, etc. Consider the task of [Part-Of-Speech Tagging](https://en.wikipedia.org/wiki/Part-of-speech_tagging) where the goal is to tag every word with its appropriate part of speech: verb, noun, adjective, etc. In the following sentence (picked from the Wiki link)
 
 $$
