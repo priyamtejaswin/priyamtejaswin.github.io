@@ -10,7 +10,7 @@ $$
 \text{The sailor dogs the hatch.}
 $$
 
-the word $\text{"dogs"}$ could be mapped to a noun or a verb. A naive (singular)token classifer, though aware of the input tokens, will ignore dependencies between the current tag and the previous tags. Structured Prediction builds on this. The features to predict the next tag will not only include the input tokens, but also the previously predicted tokens. In this sense, the features can be defined over the entire input and tags.
+the word $\text{"dogs"}$ could be mapped to a noun or a verb. A naive token classifer that only looks at the input tokens will ignore dependencies between the current tag and the previous tags. Structured Prediction builds on this. The features to predict the next tag will not only include the input tokens, but also the previously predicted tokens. In this sense, the features can be defined over the entire input and tags.
 
 The specific algorithm that we'll explore is presented in [Discriminative Training Methods for Hidden Markov Models: Theory and Experiments with Perceptron Algorithms](https://www.aclweb.org/anthology/W02-1001.pdf), published by [Michael Collins](http://www.cs.columbia.edu/~mcollins/) in EMNLP 2002. This paper was awarded the [ACL Test-of-Time Award in 2018](https://naacl2018.wordpress.com/2018/03/22/test-of-time-award-papers/).
 
@@ -26,19 +26,17 @@ unzip brown.zip
 ```
 or, if you have the GitHub code, by running `make data` from the source folder. Inside, you'll find a collection of text files with a `c[GENRE][NUMBER]` format. The `CONTENTS` file lists the genres and the text references used in the files. On inspecting a file, 
 ```
+The/at Fulton/np-tl County/nn-tl Grand/jj-tl Jury/nn-tl said/vbd Friday/nr an/at investigation/nn of/in Atlanta's/np$ recent/jj primary/nn election/nn produced/vbd ``/`` no/at evidence/nn ''/'' that/cs any/dti irregularities/nns took/vbd place/nn ./.
 
 
-	The/at Fulton/np-tl County/nn-tl Grand/jj-tl Jury/nn-tl said/vbd Friday/nr an/at investigation/nn of/in Atlanta's/np$ recent/jj primary/nn election/nn produced/vbd ``/`` no/at evidence/nn ''/'' that/cs any/dti irregularities/nns took/vbd place/nn ./.
+The/at jury/nn further/rbr said/vbd in/in term-end/nn presentments/nns that/cs the/at City/nn-tl Executive/jj-tl Committee/nn-tl ,/, which/wdt had/hvd over-all/jj charge/nn of/in the/at election/nn ,/, ``/`` deserves/vbz the/at praise/nn and/cc thanks/nns of/in the/at City/nn-tl of/in-tl Atlanta/np-tl ''/'' for/in the/at manner/nn in/in which/wdt the/at election/nn was/bedz conducted/vbn ./.
 
 
-	The/at jury/nn further/rbr said/vbd in/in term-end/nn presentments/nns that/cs the/at City/nn-tl Executive/jj-tl Committee/nn-tl ,/, which/wdt had/hvd over-all/jj charge/nn of/in the/at election/nn ,/, ``/`` deserves/vbz the/at praise/nn and/cc thanks/nns of/in the/at City/nn-tl of/in-tl Atlanta/np-tl ''/'' for/in the/at manner/nn in/in which/wdt the/at election/nn was/bedz conducted/vbn ./.
-
-
-	The/at September-October/np term/nn jury/nn had/hvd been/ben charged/vbn by/in Fulton/np-tl Superior/jj-tl Court/nn-tl Judge/nn-tl Durwood/np Pye/np to/to investigate/vb reports/nns of/in possible/jj ``/`` irregularities/nns ''/'' in/in the/at hard-fought/jj primary/nn which/wdt was/bedz won/vbn by/in Mayor-nominate/nn-tl Ivan/np Allen/np Jr./np ./.
-
+The/at September-October/np term/nn jury/nn had/hvd been/ben charged/vbn by/in Fulton/np-tl Superior/jj-tl Court/nn-tl Judge/nn-tl Durwood/np Pye/np to/to investigate/vb reports/nns of/in possible/jj ``/`` irregularities/nns ''/'' in/in the/at hard-fought/jj primary/nn which/wdt was/bedz won/vbn by/in Mayor-nominate/nn-tl Ivan/np Allen/np Jr./np ./.
 ```
 you'll find sentences are split into separate lines. Each token is accompanied with a POS-tag separated by a `/` -- `<token>/<tag>`. You can find tag abbreviations and definitions on the [Brown Corpus Wiki page](https://en.wikipedia.org/wiki/Brown_Corpus). Punctuation characters do not have a tag -- the character is repeated after `/`.
 
+I use `get_clean_line` to generate `word/tag` sequences. This function reads a line, stores the tokens and their respective tags in separate lists, and returns them.
 ```python
 def get_clean_line(line):
     line = line.lower().strip()
@@ -51,7 +49,7 @@ def get_clean_line(line):
             try:
                 word, tag = token.strip().split('/')
             except:
-                return False  # Is this allowed?
+                return False
 
             if word == tag:  # Ignore.
                 pass
@@ -66,8 +64,6 @@ def get_clean_line(line):
         else:
             return words, tags
 ```
-
-I use `def get_clean_line` to generate `word/tag` sequences. This function reads a line, stores the tokens and their respective tags in separate lists, and returns them.
 
 > I am converting everything to lower-case, and also ignoring the punctuation. These are probaly valuable features, but we can do without them for this implementation.
 
@@ -114,11 +110,11 @@ $\bar{\alpha}$ is the paramater vector for our features -- it is also of size $n
 $$
 \begin{align}
 \hat{y}_i &= \text{argmax}_{y_i}\ f(x_i, y_i) \\
-&= \text{argmax}_{y_i}\ \phi(x_{0:i}, y_i).\bar{\alpha}
+&= \text{argmax}_{y_i}\ \phi(x_{1:i}, y_i).\bar{\alpha}
 \end{align}
 $$
 
-To train this classifier, we loop over each training sample, predicting the label $\hat{y}_i$ and comparing it to the training label $y_i$. If these match, it means our current paramter values for $\bar{\alpha}$ *suffice* and need not be updated. If they don't, then we update. For each element $s < n$ in the vector,
+To train this classifier, we loop over each training sample, predicting the label $\hat{y}_i$ and comparing it to the training label $y_i$. If these match, it means our current paramter values for $\bar{\alpha}$ *suffice* and need not be updated. If they don't, then we update. For each element $s \leq n$ in the vector,
 
 $$
 \begin{align}
@@ -157,7 +153,7 @@ $$
 f(x, y) = \phi(x, y) = \sum_{i}^t \sum_{s}^n \bar{\alpha}_s . \phi_s(h_i, y_i)
 $$
 
-Collins' paper defines $h_i$ to be the "context history" with which the prediction iss made. It's defined as the tuple $(y_{-2}, y_{-1}, x_{1:n}, i)$, where $y_{-2}, y_{-1}$ are the tags for the last two tokens and $x_{1:n}$ is the trail of previous tokens. The paper also defines a global feature function $\Phi$
+Collins' paper defines $h_i$ to be the "context history" with which the prediction is made. It's defined as the tuple $(y_{-2}, y_{-1}, x_{1:n}, i)$, where $y_{-2}, y_{-1}$ are the tags for the last two tokens and $x_{1:n}$ is the trail of previous tokens. The paper also defines a global feature function $\Phi$
 
 $$
 \Phi_s(x, y) = \sum_i^t \phi_s(h_i, y_i)
@@ -187,7 +183,7 @@ All that's left is to find the highest scoring sequence ... which brings us to t
 
 **Candidate** $\hat{y}$ **is an entire sequence.**
 
-We consider the prediction $\hat{y}$ over the *sequence* of possible labels for all tokens in $x$ (captured in $\text{GEN}(x)$); as opposed to all possible labels for a single token. For a sequence of $N$ tokens with $S$ possible labels, search space over $\hat{y}_i$ was $N \times S$ if we predicting labels independently for each token. Here, exhaustive search will be of the order $S^N$!
+We consider the prediction $\hat{y}$ over the *sequence* of possible labels for all tokens in $x$ (captured in $\text{GEN}(x)$); as opposed to all possible labels for a single token. For a sequence of $N$ tokens with $S$ possible labels, search space over $\hat{y}_i$ was $N \times S$ if we were predicting labels independently for each token. Here, exhaustive search will be of the order $S^N$!
 
 ## Viterbi Decoding
 The process of generating possible tag sequences is also called decoding. Exhaustive search is infeasible. A better option would be **Greedy Decoding**: you select the most probable label at for the current timestep, *fix it*, and then move on to the next timestep. Collins' paper uses the [**Viterbi Algorithm**](https://en.wikipedia.org/wiki/Viterbi_algorithm). If you're familiar with dynamic programming then you should refer to the pseudo-code in the Wiki link. In a separate exercise, I spent some time on the Viterbi Algorithm in the context of HMMs. I'm borrowing from that here.
@@ -206,7 +202,7 @@ In the figure, this process is represented by the colours of the links. For each
 To generate the final sequence, we backtrack from the last timestep, selecting the most probable state assignments, through the most likely paths.
 
 # The training loop
-My `main` function looks something like this
+This is my main function -- the comments explain everything.
 ```python
 @plac.annotations(
     path_brown_corpus = ("Path to Brown Corpus dir.", 'positional', None, str)
@@ -241,7 +237,7 @@ def main(path_brown_corpus):
     train_loop(train_data, word2ix, tag2ix, ix2tag, wObs, wTags, test_data)
 ```
 
-and the `train_loop` looks something like this
+And the `train_loop` looks something like this
 ```python
 for outer in range(5):  # Or *epochs* if you're familiar with neural networks.
     for wdseq, tgseq in tqdm(train_data):
