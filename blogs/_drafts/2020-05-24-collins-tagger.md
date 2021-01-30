@@ -179,8 +179,20 @@ All that's left is to find the highest scoring sequence ... which brings us to t
 We consider the prediction $\hat{y}$ over the *sequence* of possible labels for all tokens in $x$ (captured in $\text{GEN}(x)$); as opposed to all possible labels for a single token. For a sequence of $N$ tokens with $S$ possible labels, search space over $\hat{y}_i$ was $N \times S$ if we predicting labels independently for each token. Here, exhaustive search will be of the order $S^N$!
 
 ## Viterbi Decoding
-The process of generating possible tag sequences is also called decoding. Exhaustiv search is infeasible. A better option would be **Greedy Decoding**: you select the most probable label at for the current timestep, *fix it*, and then move on to the next timestep.
+The process of generating possible tag sequences is also called decoding. Exhaustive search is infeasible. A better option would be **Greedy Decoding**: you select the most probable label at for the current timestep, *fix it*, and then move on to the next timestep. Collins' paper uses the [**Viterbi Algorithm**](https://en.wikipedia.org/wiki/Viterbi_algorithm). If you're familiar with dynamic programming then you should refer to the pseudo-code in the Wiki link. In a separate exercise, I spent some time on the Viterbi Algorithm in the context of HMMs. I'm borrowing from that here.
 
+To motivate why Viterbi works, and it's link to Dynamic Programming, consider a simpler problem you know the best tags upto timestep $t-1$. Now, you simply have to pick the tag that maximizes the assignment for the final token. We can extend this logic back to the first token. In the figure below, $x$ is the observed variable (i.e. the **token**) and $z$ is the unknown state variable (i.e. the **tag** $y_t$). Consider the state space to be $3$ (i.e. we only have 3 tags to select from) and our history tuple to be $(y_{t-1}, x_{[1:t]}, y_t)$.
+
+<div class="post-image">
+<img src="/assets/images/hmm-viterbi.svg">
+<p><em><font size="-1">Viterbi state selection.</font></em></p>
+</div>
+
+For the first observation $x_1$ there is only one state variable, $z_1$. Since $y_0$ is `None`, we can assign a score to all three states using the parameter vector $\bar{\alpha}$ and considering the features for $x_1 \times y_1$ (i.e. combinations of $x_1$ with the three possible states). These will serve as the scores for $s_1, s_2, s_3$. For the next observation $x_2$, we have to consider all possible assignments for the previous token -- remember that our history for $x_2$ contains $y_2$ *and* $y_1$. Thus, to compute the scores $s$ for $z_2$, we *consider* all possible previous assignments ($z_1$), and *select* the link that maximizes the score for $z_2$.
+
+In the figure, this process is represented by the colours of the links. For each token value $s$ in $z_2$, we consider all three tag assignments *upto* the previous token -- this is captured in the $s$ scores for $z_1$. For each state $s$ in $z_2$, after considering all three paths, we select the one which maximizes the score for that state, and update the score. In the [code](https://github.com/priyamtejaswin/c00lHaX/blob/master/ner_perceptron/collins_perceptron.py#L348), this process is called `Phase 1`. The time complexity for this phase is $N \times S^2$.
+
+To generate the final sequence, we backtrack from the last timestep, selecting the most probable state assignments, through the most likely paths.
 
 # Comment on evaluation/metrics
 ```bash
