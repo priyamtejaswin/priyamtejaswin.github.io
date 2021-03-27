@@ -46,6 +46,12 @@ adder(2, 6);
 // > 8
 {% endhighlight %}
 
+```python
+# This is some Python code.
+x = range(10)
+d = {i:i*2 for i in x}
+```
+
 Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.
 
 ### Gists via GitHub Pages
