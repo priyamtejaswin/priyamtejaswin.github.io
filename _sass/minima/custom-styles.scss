@@ -1,2 +1,26 @@
 // Placeholder to allow defining custom styles that override everything else.
 // (Use `_sass/minima/custom-variables.scss` to override variable defaults)
+
+/**
+ * Projects
+ */
+ .projects-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    border: none
+  }
+  
+  .project-row {
+    vertical-align: top;
+  
+    td {
+      padding-left: 0px;
+      padding-top: 0px;
+      padding-bottom: 10px;
+      border: none;
+    }
+  
+    .project-data {
+      padding-left: 20px;
+    }
+  }
