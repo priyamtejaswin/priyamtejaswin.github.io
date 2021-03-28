@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title: About
 ---
 
@@ -10,10 +10,9 @@ I created this website to organise and track my personal projects (many of which
 
 I also wanted to organise my notes on academic papers; I tend to keep a track my readings in different Markdown files. Again, these range from simple summaries of an interesting paper [(Isolation Forests)](https://hackmd.io/s/H1ZPXOq8m) to dense reviews of a single concept [(Adversarial Examples)](https://hackmd.io/s/By8Pu47af).
 
-Drop a note if you found something to be helpful!
+You can find my email, and other links at the footer.
+Drop a note if you thought something was helpful!
 
 ---
 
-*This website was made using [Jekyll][jekyll-organization] and the [minima](https://github.com/jekyll/minima) theme.*
-
-[jekyll-organization]: https://github.com/jekyll
+*This website was made using [Jekyll](https://github.com/jekyll) and the [minima](https://github.com/jekyll/minima) theme.*
