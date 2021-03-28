@@ -1,5 +1,17 @@
 # minima
 
+*This repo has all the code for generating the static blog pages for [priyamtejaswin.github.io](priyamtejaswin.github.io). The base `jekyll/minima` theme has been modified as follows:*
+
+* Posts are split by `categories`: `blogs/_posts`, `projdir/_posts`. Blogs and Project home pages have different layouts.
+* `projects.md` was added to be the base file for the Projects display page.
+* `layouts/home.html` lists all posts in `site.categories.blogs`.
+* `layouts/twocolprojects.html` was added as the two-column layout for all projects posts.
+* Each category will have its own `_drafts` dir: `blogs/_drafts`
+* `_sass/minima/_base.scss` was modified to disable `background-color: $table-zebra-color` in table rows.
+* `_sass/minima/custom-styles.scss` was appended with styles for `project-table` and rows.
+
+---
+
 *Minima is a one-size-fits-all Jekyll theme for writers*. It's Jekyll's default (and first) theme. It's what you get when you run `jekyll new`.
 
 ***Disclaimer:** The information here may vary depending on the version you're using. Please refer to the `README.md` bundled
