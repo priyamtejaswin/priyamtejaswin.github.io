@@ -1,6 +1,4 @@
 ---
-layout: page
+layout: twocolprojects
 title: Projects
 ---
-
-*Some content goes here.*
