@@ -4,23 +4,30 @@
 /**
  * Projects
  */
- .projects-table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    border: none
+.projects-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: none
+}
+
+.project-row {
+  vertical-align: top;
+
+  td {
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 10px;
+    border: none;
   }
-  
-  .project-row {
-    vertical-align: top;
-  
-    td {
-      padding-left: 0px;
-      padding-top: 0px;
-      padding-bottom: 10px;
-      border: none;
-    }
-  
-    .project-data {
-      padding-left: 20px;
-    }
+
+  .project-data {
+    padding-left: 20px;
   }
+}
+
+/**
+ * Img + Em caption
+ */
+img + em {
+  font-size: 5px;
+}
