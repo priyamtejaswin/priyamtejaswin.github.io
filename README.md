@@ -9,7 +9,7 @@
 * Each category will have its own `_drafts` dir: `blogs/_drafts`
 * `_sass/minima/_base.scss` was modified to disable `background-color: $table-zebra-color` in table rows.
 * `_sass/minima/custom-styles.scss` was appended with styles for `project-table` and rows.
-
+* `_includes/custom-head.html` adds `MathJax` support.
 ---
 
 *Minima is a one-size-fits-all Jekyll theme for writers*. It's Jekyll's default (and first) theme. It's what you get when you run `jekyll new`.

@@ -15,7 +15,22 @@ print_hi('Tom')
 #=> prints 'Hi, Tom' to STDOUT.
 {% endhighlight %}
 
+```python
+# This is a comment
+x = range(10)
+y = x * 2
+```
+
 Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+
+$$
+\begin{align}
+x + y &= 2 \\
+z &= \alpha * 2
+\end{align}
+$$
+
+Inline math $\alpha = \beta$
 
 [jekyll-docs]: http://jekyllrb.com/docs/home
 [jekyll-gh]:   https://github.com/jekyll/jekyll
