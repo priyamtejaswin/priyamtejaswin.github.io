@@ -61,3 +61,8 @@ plugins:
 permalink: pretty
 
 show_excerpts: true
+
+# New fields not defaulted by jekyll-new with the minima theme
+# Add a copyright. A copyright symbol and year will be added automatically
+# copyright: Company Name, Inc. 
+copyright: "Priyam Tejaswin"
