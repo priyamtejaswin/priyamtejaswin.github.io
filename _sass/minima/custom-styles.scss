@@ -51,3 +51,11 @@ img + em {
 .project-data h3 {
   margin-bottom: 0px;
 }
+
+/**
+ * Left-Right position change
+ * was due ot scroll bar!
+ */
+html { 
+  overflow-y: scroll; 
+}
